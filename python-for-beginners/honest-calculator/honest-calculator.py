@@ -1,13 +1,18 @@
-msg_0 = "Enter an equation"
-msg_1 = "Do you even know what numbers are? Stay focused!"
-msg_2 = "Yes ... an interesting math operation. You've slept through all classes, haven't you?"
-msg_3 = "Yeah... division by zero. Smart move..."
-msg_4 = "Do you want to store the result? (y / n):"
-msg_5 = "Do you want to continue calculations? (y / n):"
-msg_6 = " ... lazy"
-msg_7 = " ... very lazy"
-msg_8 = " ... very, very lazy"
-msg_9 = "You are"
+messages = {
+    0: "Enter an equation",
+    1: "Do you even know what numbers are? Stay focused!",
+    2: "Yes ... an interesting math operation. You've slept through all classes, haven't you?",
+    3: "Yeah... division by zero. Smart move...",
+    4: "Do you want to store the result? (y / n):",
+    5: "Do you want to continue calculations? (y / n):",
+    6: " ... lazy",
+    7: " ... very lazy",
+    8: " ... very, very lazy",
+    9: "You are",
+    10: "Are you sure? It is only one digit! (y / n)",
+    11: "Don't be silly! It's just one number! Add to the memory? (y / n)",
+    12: "Last chance! Do you really want to embarrass yourself? (y / n)"
+}
 
 PLUS = "+"
 MINUS = "-"
@@ -32,7 +37,7 @@ def is_a_number(j):
 
 def get_calculation():
     """Get calculation from user, return parts"""
-    calc = input(msg_0 + "\n")
+    calc = input(messages[0] + "\n")
     calc_parts = calc.split()
     return calc_parts[0], calc_parts[1], calc_parts[2]
 
@@ -55,7 +60,7 @@ def calculate(x, oper, y):
         return float(x) * float(y)
     if oper == DIV:
         if float(y) == 0.0:
-            print(msg_3)
+            print(messages[3])
             return None
         return float(x) / float(y)
 
@@ -73,13 +78,13 @@ def check_laziness(x, oper, y):
     msg = ""
 
     if is_one_digit(x) and is_one_digit(y):
-        msg += msg_6
-    if (x == "1" or y == "1") and oper == MULT:
-        msg += msg_7
+        msg += messages[6]
+    if (float(x) == 1 or float(y) == 1) and oper == MULT:
+        msg += messages[7]
     if (float(x) == 0 or float(y) == 0) and oper in [MULT, PLUS, MINUS]:
-        msg += msg_8
+        msg += messages[8]
     if msg != "":
-        print(msg_9 + msg)
+        print(messages[9] + msg)
 
 
 # Initializations
@@ -95,16 +100,18 @@ while True:
     if y == "M":
         y = str(memory)
 
+    #print("CURRENT STATE: x =", x, ", oper =", oper, ", y =", y)
+
     # Check for valid numbers
     all_numbers = is_a_number(x) and is_a_number(y)
     if not all_numbers:
-        print(msg_1)
+        print(messages[1])
         continue
 
     # Check for valid oper
     valid_oper = oper in OPERS
     if not valid_oper:
-        print(msg_2)
+        print(messages[2])
         continue
 
     # Check for laziness
@@ -119,9 +126,19 @@ while True:
     print(str(result))
 
     # Store result
-    if get_yes_no_input(msg_4) == "y":
-        memory = result
+    if get_yes_no_input(messages[4]) == "y":
+        if is_one_digit(result):
+            msg_index = 10
+            while msg_index <= 12:
+                if get_yes_no_input(messages[msg_index]) == "y":
+                    msg_index += 1
+                    if msg_index > 12:
+                        memory = result
+                else:
+                    break
+        else:
+            memory = result
 
     # Continue?
-    if get_yes_no_input(msg_5) == "n":
+    if get_yes_no_input(messages[5]) == "n":
         break
