@@ -1,5 +1,6 @@
-import json
+# the list with words from string
+# please, do not modify it
+some_iterable = input().split()
 
-# help(json.load)
-# print(json.load.__doc__)
-help(json.load)
+# use dictionary comprehension to create a new dictionary
+new_dict = {item.upper(): item.lower() for item in some_iterable}
