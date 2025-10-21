@@ -1,6 +1,6 @@
-# jetbrains-academy
-Python Projects
+# Jetbrains Academy
 
+Projects created while learning with JetBrains Academy
 
 | Tables   |      Are      |  Cool |
 | -------- | :-----------: | ----: |

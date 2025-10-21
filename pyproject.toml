@@ -1,0 +1,7 @@
+[project]
+name = "learning-jetbrains-academy"
+version = "0.1.0"
+description = "Projects created while learning with JetBrains Academy"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
