@@ -2,6 +2,7 @@ import random
 
 dinner_bill = {}
 
+
 def get_valid_float(prompt):
     """Keep asking until valid positive float is entered"""
     while True:
@@ -15,6 +16,7 @@ def get_valid_float(prompt):
         except ValueError:
             print("Invalid bill value")
 
+
 def get_yes_no_input(prompt):
     """Keep asking until Yes or No is entered"""
     while True:
@@ -23,6 +25,7 @@ def get_yes_no_input(prompt):
             return response
         else:
             print("Please enter either Yes or No")
+
 
 people = input("Enter the number of friends joining (including you):")
 if people.isdigit() and int(people) > 0:
@@ -37,7 +40,9 @@ if people.isdigit() and int(people) > 0:
     for name, value in dinner_bill.items():
         dinner_bill[name] = bill_per_person
 
-    lucky_feature = get_yes_no_input('Do you want to use the "Who is lucky?" feature? Write Yes/No:\n')
+    lucky_feature = get_yes_no_input(
+        'Do you want to use the "Who is lucky?" feature? Write Yes/No:\n'
+    )
     if lucky_feature == "Yes":
         lucky_one = random.choice(list(dinner_bill.keys()))
         print(f"{lucky_one} is the lucky one!")
