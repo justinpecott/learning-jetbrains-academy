@@ -5,3 +5,8 @@ description = "Projects created while learning with JetBrains Academy"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "friday-night-coding",
+]

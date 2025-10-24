@@ -3,12 +3,13 @@
 
 def read_hyperskill_file():
     """Read and print the contents of the hyperskill dataset file."""
-    filename = "hyperskill-dataset-117283190.txt"
+    # Day 1 hyperskill-dataset-117283190.txt
+    # Day 2 hyperskill-dataset-117316244.txt
+    filename = "hyperskill-dataset-117316244.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
             content = file.read()
-            print(content)
             return content
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found in the current directory.")
@@ -39,20 +40,41 @@ if __name__ == "__main__":
     print("Reading hyperskill dataset file...\n")
     print("=" * 50)
     content = read_hyperskill_file().strip()
+    print(content)
 
     if content:
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
-    digit_dict = {}
-    for d in range(10):
-        digit_dict[str(d)] = 0
+    # Day 2 solution
+    # angles = content.split(",")
 
-    for char in content:
-        print(char)
-        digit_dict[char] += 1
+    # # Convert strings to integers and normalize each angle to 0-359 range
+    # normalized_angles = []
+    # for angle in angles:
+    #     angle_int = int(angle.strip())  # Convert to int and remove whitespace
+    #     normalized = angle_int % 360
+    #     normalized_angles.append(normalized)
 
-    sorted_dict = dict(
-        sorted(digit_dict.items(), key=lambda item: item[1], reverse=True)
-    )
-    print(sorted_dict)
+    # # Sum all the normalized angles
+    # total = sum(normalized_angles)
+
+    # # Get final position (0-359)
+    # final_position = total % 360
+
+    # print(final_position)
+
+    # Day 1 solution
+    #
+    # digit_dict = {}
+    # for d in range(10):
+    #     digit_dict[str(d)] = 0
+
+    # for char in content:
+    #     print(char)
+    #     digit_dict[char] += 1
+
+    # sorted_dict = dict(
+    #     sorted(digit_dict.items(), key=lambda item: item[1], reverse=True)
+    # )
+    # print(sorted_dict)
