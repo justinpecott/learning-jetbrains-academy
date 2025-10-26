@@ -6,7 +6,9 @@ def read_hyperskill_file():
     # Day 1 hyperskill-dataset-117283190.txt
     # Day 2 hyperskill-dataset-117316244.txt
     # Day 3 hyperskill-dataset-117316666.txt
-    filename = "hyperskill-dataset-117316666.txt"
+    # Day 4 hyperskill-dataset-117363050.txt
+    # Day 5 hyperskill-dataset-117388870.txt
+    filename = "hyperskill-dataset-117388870.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -47,6 +49,62 @@ if __name__ == "__main__":
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
+    # # Day 5 solution
+    # notes = 'ABCDEFG'
+    # shortest_length = 999999
+    # for i in range(0, 1000):
+    #     j = i + 6
+    #     for j in range(i + 6, 1000):
+    #         if j - i < shortest_length:
+    #             k = content[i:j]
+    #             if set(notes).issubset(set(k)):
+    #                 shortest_length = j - i
+    #                 print(f"Found: {k} with length {shortest_length}")
+    #                 break
+
+    # # Day 4 solution
+
+    # # Define the keypad as a 2D grid
+    # keypad = [
+    #     ['A', 'B', 'C', 'D'],
+    #     ['E', 'F', 'G', 'H'],
+    #     ['I', 'J', 'K', 'L'],
+    #     ['M', 'N', 'O', 'P']
+    # ]
+
+    # # Split content by newlines to get each instruction sequence
+    # instruction_lines = content.strip().split('\n')
+
+    # code = []
+
+    # for line in instruction_lines:
+    #     print("---")
+    #     print(line)
+    #     # Start at A (row 0, col 0)
+    #     row, col = 0, 0
+        
+    #     # Split by comma to get individual moves
+    #     moves = line.split(',')
+        
+    #     for move in moves:
+    #         move = move.strip()
+    #         if move == 'UP':
+    #             row = max(0, row - 1)
+    #         elif move == 'DOWN':
+    #             row = min(3, row + 1)
+    #         elif move == 'LEFT':
+    #             col = max(0, col - 1)
+    #         elif move == 'RIGHT':
+    #             col = min(3, col + 1)
+    
+    #     # Record the final letter
+    #     print(keypad[row][col])
+    #     code.append(keypad[row][col])
+    #     print("---")
+
+    # # Join all letters to get the final code
+    # final_code = ''.join(code)
+    # print(final_code)
 
     # # Day 3 solution
     # # Create dictionary to count each letter
@@ -98,3 +156,9 @@ if __name__ == "__main__":
     #     sorted(digit_dict.items(), key=lambda item: item[1], reverse=True)
     # )
     # print(sorted_dict)
+
+# EGMBJKMCJPDAHIFCMIFLLMOKACGEAJAPEEPCNBNLMHFAKCBIIKBHPEHBKKDFNKFE
+# EGMBJKMCJPDAHIFCMIFLLMOKACGEAJAPEEPCNBNLMHFAKCBIIKBHPEHBKKDFNKFE
+# DLCOCHPDAADCMPJIELLKCIGFBIIEFEJEHGCMGCFNKNIAMNEDLGIEHPKFAANFFCFH
+# AEIBHAAAJEINDIBNIAIBHEIODFDLACJEHHBAGEAIKGIDAIFHFBCKBJCBBOHKNGAM
+# AEIBHAAAJEINDIBNIAIBHEIODFDLACJEHHBAGEAIKGIDAIFHFBCKBJCBBOHKNGAM
