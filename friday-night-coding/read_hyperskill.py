@@ -1,5 +1,4 @@
-# Script to read the hyperskill dataset text file
-
+import math
 
 def read_hyperskill_file():
     """Read and print the contents of the hyperskill dataset file."""
@@ -8,7 +7,8 @@ def read_hyperskill_file():
     # Day 3 hyperskill-dataset-117316666.txt
     # Day 4 hyperskill-dataset-117363050.txt
     # Day 5 hyperskill-dataset-117388870.txt
-    filename = "hyperskill-dataset-117388870.txt"
+    # Day 6 hyperskill-dataset-117397278.txt
+    filename = "hyperskill-dataset-117397278.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -24,11 +24,13 @@ def read_hyperskill_file():
 
 def read_hyperskill_file_lines():
     """Read the file line by line and return as a list."""
-    filename = "hyperskill-dataset-117283190.txt"
+    filename = "hyperskill-dataset-117397278.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
             lines = file.readlines()
+            # Strip newlines from each line
+            lines = [line.strip() for line in lines]
             return lines
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found in the current directory.")
@@ -42,12 +44,42 @@ if __name__ == "__main__":
     # Read and display the entire file
     print("Reading hyperskill dataset file...\n")
     print("=" * 50)
-    content = read_hyperskill_file().strip()
+    content = read_hyperskill_file_lines()
     print(content)
 
     if content:
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
+
+    # Day 6 solution
+    # Day 7 solution - 4D Vector distances
+    vectors = []
+    
+    # Parse each line as a 4D vector
+    for line in content:
+        # Split by comma and convert to integers
+        coords = [int(x.strip()) for x in line.split(',')]
+        vectors.append(coords)
+    
+    total_distance = 0
+    
+    # Calculate distance between consecutive vectors
+    for i in range(len(vectors) - 1):
+        v1 = vectors[i]
+        v2 = vectors[i + 1]
+        
+        # Euclidean distance in 4D: sqrt((x2-x1)² + (y2-y1)² + (z2-z1)² + (w2-w1)²)
+        distance_squared = sum((v2[j] - v1[j]) ** 2 for j in range(4))
+        distance = math.sqrt(distance_squared)
+        
+        # Round up to nearest integer
+        rounded_distance = math.ceil(distance)
+        
+        print(f"Vector {i} to {i+1}: {v1} -> {v2}, distance = {distance:.2f}, rounded up = {rounded_distance}")
+        
+        total_distance += rounded_distance
+    
+    print(f"\nTotal distance: {total_distance}")
 
     # # Day 5 solution
     # notes = 'ABCDEFG'
