@@ -8,7 +8,8 @@ def read_hyperskill_file():
     # Day 4 hyperskill-dataset-117363050.txt
     # Day 5 hyperskill-dataset-117388870.txt
     # Day 6 hyperskill-dataset-117397278.txt
-    filename = "hyperskill-dataset-117397278.txt"
+    # Day 7 hyperskill-reply-144295977.txt
+    filename = "hyperskill-reply-144295977.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -24,7 +25,7 @@ def read_hyperskill_file():
 
 def read_hyperskill_file_lines():
     """Read the file line by line and return as a list."""
-    filename = "hyperskill-dataset-117397278.txt"
+    filename = "hyperskill-reply-144295977.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -40,46 +41,79 @@ def read_hyperskill_file_lines():
         return None
 
 
+def convert_phone_to_binary(phone_number):
+    """
+    Convert a decimal phone number to 32-bit binary with overflow handling.
+    
+    Args:
+        phone_number: integer phone number to convert
+    
+    Returns: string in format "overflows,binary_number"
+    """
+    # Maximum value for a 32-bit unsigned integer
+    max_32bit = 2**32 - 1  # 4294967295
+    overflow_value = 2**32  # 4294967296 (the value to subtract on overflow)
+    
+    # Count overflows
+    overflows = 0
+    
+    # Reduce the number until it fits in 32 bits
+    while phone_number > max_32bit:
+        overflows += 1
+        phone_number -= overflow_value
+        print(f"Overflow occurred! New phone number: {phone_number}. Overflows: {overflows}")
+    
+    # Convert to binary and remove leading zeros
+    binary = bin(phone_number)[2:]  # Remove '0b' prefix
+    
+    # Return the result
+    return f"{overflows},{binary}"
+
+
 if __name__ == "__main__":
     # Read and display the entire file
     print("Reading hyperskill dataset file...\n")
     print("=" * 50)
-    content = read_hyperskill_file_lines()
+    content = read_hyperskill_file()
     print(content)
 
     if content:
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
-    # Day 6 solution
-    # Day 7 solution - 4D Vector distances
-    vectors = []
+    # Day 7 solution
+    answer = convert_phone_to_binary(int(content.strip()))
+    print(answer)
+
+
+    # # Day 6 solution - 4D Vector distances
+    # vectors = []
     
-    # Parse each line as a 4D vector
-    for line in content:
-        # Split by comma and convert to integers
-        coords = [int(x.strip()) for x in line.split(',')]
-        vectors.append(coords)
+    # # Parse each line as a 4D vector
+    # for line in content:
+    #     # Split by comma and convert to integers
+    #     coords = [int(x.strip()) for x in line.split(',')]
+    #     vectors.append(coords)
     
-    total_distance = 0
+    # total_distance = 0
     
-    # Calculate distance between consecutive vectors
-    for i in range(len(vectors) - 1):
-        v1 = vectors[i]
-        v2 = vectors[i + 1]
+    # # Calculate distance between consecutive vectors
+    # for i in range(len(vectors) - 1):
+    #     v1 = vectors[i]
+    #     v2 = vectors[i + 1]
         
-        # Euclidean distance in 4D: sqrt((x2-x1)² + (y2-y1)² + (z2-z1)² + (w2-w1)²)
-        distance_squared = sum((v2[j] - v1[j]) ** 2 for j in range(4))
-        distance = math.sqrt(distance_squared)
+    #     # Euclidean distance in 4D: sqrt((x2-x1)² + (y2-y1)² + (z2-z1)² + (w2-w1)²)
+    #     distance_squared = sum((v2[j] - v1[j]) ** 2 for j in range(4))
+    #     distance = math.sqrt(distance_squared)
         
-        # Round up to nearest integer
-        rounded_distance = math.ceil(distance)
+    #     # Round up to nearest integer
+    #     rounded_distance = math.ceil(distance)
         
-        print(f"Vector {i} to {i+1}: {v1} -> {v2}, distance = {distance:.2f}, rounded up = {rounded_distance}")
+    #     print(f"Vector {i} to {i+1}: {v1} -> {v2}, distance = {distance:.2f}, rounded up = {rounded_distance}")
         
-        total_distance += rounded_distance
+    #     total_distance += rounded_distance
     
-    print(f"\nTotal distance: {total_distance}")
+    # print(f"\nTotal distance: {total_distance}")
 
     # # Day 5 solution
     # notes = 'ABCDEFG'
