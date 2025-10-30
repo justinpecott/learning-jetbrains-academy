@@ -1,4 +1,5 @@
 import math
+from collections import deque
 
 
 def read_hyperskill_file():
@@ -11,7 +12,8 @@ def read_hyperskill_file():
     # Day 6 hyperskill-dataset-117397278.txt
     # Day 7 hyperskill-reply-144295977.txt
     # Day 8 hyperskill-dataset-117485786.txt
-    filename = "hyperskill-dataset-117485786.txt"
+    # Day 9 hyperskill-dataset-117488223.txt
+    filename = "hyperskill-dataset-117488223.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -27,7 +29,7 @@ def read_hyperskill_file():
 
 def read_hyperskill_file_lines():
     """Read the file line by line and return as a list."""
-    filename = "hyperskill-dataset-117485786.txt"
+    filename = "hyperskill-dataset-117488223.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -78,26 +80,77 @@ if __name__ == "__main__":
     # Read and display the entire file
     print("Reading hyperskill dataset file...\n")
     print("=" * 50)
-    content = read_hyperskill_file()
+    content = read_hyperskill_file_lines()
     print(content)
 
     if content:
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
-    # Day 8 solution
-    names = content.strip().split(" ")
-    for i in range(len(names)):
-        ana = False
-        for j in range(len(names)):
-            if names[i] != names[j] and len(names[i]) == len(names[j]):
-                # Check if they're anagrams by comparing sorted characters
-                if sorted(names[i].lower()) == sorted(names[j].lower()):
-                    # print(f"Anagram found: {names[i]} and {names[j]}")
-                    ana = True
-                    break
-        if not ana:
-            print(f"No anagram for: {names[i]}")
+    # Day 9 solution
+    maze = content
+
+    # Find start (P) and goal (G) positions
+    start = None
+    goal = None
+
+    for row in range(len(maze)):
+        for col in range(len(maze[row])):
+            if maze[row][col] == "P":
+                start = (row, col)
+            elif maze[row][col] == "G":
+                goal = (row, col)
+
+    print(f"Start: {start}, Goal: {goal}")
+
+    # BFS to find shortest path
+    queue = deque([(start, "")])  # (position, path)
+    visited = {start}
+
+    # Direction mappings: (row_delta, col_delta, direction_letter)
+    directions = [
+        (-1, 0, "U"),  # Up
+        (1, 0, "D"),  # Down
+        (0, -1, "L"),  # Left
+        (0, 1, "R"),  # Right
+    ]
+
+    while queue:
+        (row, col), path = queue.popleft()
+
+        # Check if we reached the goal
+        if (row, col) == goal:
+            print(f"Shortest path: {path}")
+            print(f"Path length: {len(path)}")
+            break
+
+        # Try all four directions
+        for dr, dc, direction in directions:
+            new_row, new_col = row + dr, col + dc
+
+            # Check if the new position is valid
+            if (
+                0 <= new_row < len(maze)
+                and 0 <= new_col < len(maze[new_row])
+                and maze[new_row][new_col] != "#"
+                and (new_row, new_col) not in visited
+            ):
+                visited.add((new_row, new_col))
+                queue.append(((new_row, new_col), path + direction))
+
+    # # Day 8 solution
+    # names = content.strip().split(" ")
+    # for i in range(len(names)):
+    #     ana = False
+    #     for j in range(len(names)):
+    #         if names[i] != names[j] and len(names[i]) == len(names[j]):
+    #             # Check if they're anagrams by comparing sorted characters
+    #             if sorted(names[i].lower()) == sorted(names[j].lower()):
+    #                 # print(f"Anagram found: {names[i]} and {names[j]}")
+    #                 ana = True
+    #                 break
+    #     if not ana:
+    #         print(f"No anagram for: {names[i]}")
 
     # for name in names:
     #     if len(name) > 0:
