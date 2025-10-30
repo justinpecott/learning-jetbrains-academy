@@ -1,5 +1,6 @@
 import math
 
+
 def read_hyperskill_file():
     """Read and print the contents of the hyperskill dataset file."""
     # Day 1 hyperskill-dataset-117283190.txt
@@ -9,7 +10,8 @@ def read_hyperskill_file():
     # Day 5 hyperskill-dataset-117388870.txt
     # Day 6 hyperskill-dataset-117397278.txt
     # Day 7 hyperskill-reply-144295977.txt
-    filename = "hyperskill-reply-144295977.txt"
+    # Day 8 hyperskill-dataset-117485786.txt
+    filename = "hyperskill-dataset-117485786.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -25,7 +27,7 @@ def read_hyperskill_file():
 
 def read_hyperskill_file_lines():
     """Read the file line by line and return as a list."""
-    filename = "hyperskill-reply-144295977.txt"
+    filename = "hyperskill-dataset-117485786.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -44,28 +46,30 @@ def read_hyperskill_file_lines():
 def convert_phone_to_binary(phone_number):
     """
     Convert a decimal phone number to 32-bit binary with overflow handling.
-    
+
     Args:
         phone_number: integer phone number to convert
-    
+
     Returns: string in format "overflows,binary_number"
     """
     # Maximum value for a 32-bit unsigned integer
     max_32bit = 2**32 - 1  # 4294967295
     overflow_value = 2**32  # 4294967296 (the value to subtract on overflow)
-    
+
     # Count overflows
     overflows = 0
-    
+
     # Reduce the number until it fits in 32 bits
     while phone_number > max_32bit:
         overflows += 1
         phone_number -= overflow_value
-        print(f"Overflow occurred! New phone number: {phone_number}. Overflows: {overflows}")
-    
+        print(
+            f"Overflow occurred! New phone number: {phone_number}. Overflows: {overflows}"
+        )
+
     # Convert to binary and remove leading zeros
     binary = bin(phone_number)[2:]  # Remove '0b' prefix
-    
+
     # Return the result
     return f"{overflows},{binary}"
 
@@ -81,38 +85,57 @@ if __name__ == "__main__":
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
-    # Day 7 solution
-    answer = convert_phone_to_binary(int(content.strip()))
-    print(answer)
+    # Day 8 solution
+    names = content.strip().split(" ")
+    for i in range(len(names)):
+        ana = False
+        for j in range(len(names)):
+            if names[i] != names[j] and len(names[i]) == len(names[j]):
+                # Check if they're anagrams by comparing sorted characters
+                if sorted(names[i].lower()) == sorted(names[j].lower()):
+                    # print(f"Anagram found: {names[i]} and {names[j]}")
+                    ana = True
+                    break
+        if not ana:
+            print(f"No anagram for: {names[i]}")
 
+    # for name in names:
+    #     if len(name) > 0:
+    #         first_letter = name[0].upper()
+    #         last_letter = name[-1].upper()
+    #         print(f"{first_letter}{last_letter}")
+
+    # Day 7 solution
+    # answer = convert_phone_to_binary(int(content.strip()))
+    # print(answer)
 
     # # Day 6 solution - 4D Vector distances
     # vectors = []
-    
+
     # # Parse each line as a 4D vector
     # for line in content:
     #     # Split by comma and convert to integers
     #     coords = [int(x.strip()) for x in line.split(',')]
     #     vectors.append(coords)
-    
+
     # total_distance = 0
-    
+
     # # Calculate distance between consecutive vectors
     # for i in range(len(vectors) - 1):
     #     v1 = vectors[i]
     #     v2 = vectors[i + 1]
-        
+
     #     # Euclidean distance in 4D: sqrt((x2-x1)² + (y2-y1)² + (z2-z1)² + (w2-w1)²)
     #     distance_squared = sum((v2[j] - v1[j]) ** 2 for j in range(4))
     #     distance = math.sqrt(distance_squared)
-        
+
     #     # Round up to nearest integer
     #     rounded_distance = math.ceil(distance)
-        
+
     #     print(f"Vector {i} to {i+1}: {v1} -> {v2}, distance = {distance:.2f}, rounded up = {rounded_distance}")
-        
+
     #     total_distance += rounded_distance
-    
+
     # print(f"\nTotal distance: {total_distance}")
 
     # # Day 5 solution
@@ -148,10 +171,10 @@ if __name__ == "__main__":
     #     print(line)
     #     # Start at A (row 0, col 0)
     #     row, col = 0, 0
-        
+
     #     # Split by comma to get individual moves
     #     moves = line.split(',')
-        
+
     #     for move in moves:
     #         move = move.strip()
     #         if move == 'UP':
@@ -162,7 +185,7 @@ if __name__ == "__main__":
     #             col = max(0, col - 1)
     #         elif move == 'RIGHT':
     #             col = min(3, col + 1)
-    
+
     #     # Record the final letter
     #     print(keypad[row][col])
     #     code.append(keypad[row][col])
