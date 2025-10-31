@@ -13,7 +13,8 @@ def read_hyperskill_file():
     # Day 7 hyperskill-reply-144295977.txt
     # Day 8 hyperskill-dataset-117485786.txt
     # Day 9 hyperskill-dataset-117488223.txt
-    filename = "hyperskill-dataset-117488223.txt"
+    # Day 10 hyperskill-dataset-117517182.txt
+    filename = "hyperskill-dataset-117517182.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -29,7 +30,7 @@ def read_hyperskill_file():
 
 def read_hyperskill_file_lines():
     """Read the file line by line and return as a list."""
-    filename = "hyperskill-dataset-117488223.txt"
+    filename = "hyperskill-dataset-117517182.txt"
 
     try:
         with open(filename, "r", encoding="utf-8") as file:
@@ -87,56 +88,62 @@ if __name__ == "__main__":
         print("\n" + "=" * 50)
         print(f"File read successfully! Total characters: {len(content)}")
 
-    # Day 9 solution
-    maze = content
+    # Day 10 solution
+    for line in content:
+        for char in line:
+            if line.count(char) == 1:
+                print(f"non-repeat: {char}")
 
-    # Find start (P) and goal (G) positions
-    start = None
-    goal = None
+    # # Day 9 solution
+    # maze = content
 
-    for row in range(len(maze)):
-        for col in range(len(maze[row])):
-            if maze[row][col] == "P":
-                start = (row, col)
-            elif maze[row][col] == "G":
-                goal = (row, col)
+    # # Find start (P) and goal (G) positions
+    # start = None
+    # goal = None
 
-    print(f"Start: {start}, Goal: {goal}")
+    # for row in range(len(maze)):
+    #     for col in range(len(maze[row])):
+    #         if maze[row][col] == "P":
+    #             start = (row, col)
+    #         elif maze[row][col] == "G":
+    #             goal = (row, col)
 
-    # BFS to find shortest path
-    queue = deque([(start, "")])  # (position, path)
-    visited = {start}
+    # print(f"Start: {start}, Goal: {goal}")
 
-    # Direction mappings: (row_delta, col_delta, direction_letter)
-    directions = [
-        (-1, 0, "U"),  # Up
-        (1, 0, "D"),  # Down
-        (0, -1, "L"),  # Left
-        (0, 1, "R"),  # Right
-    ]
+    # # BFS to find shortest path
+    # queue = deque([(start, "")])  # (position, path)
+    # visited = {start}
 
-    while queue:
-        (row, col), path = queue.popleft()
+    # # Direction mappings: (row_delta, col_delta, direction_letter)
+    # directions = [
+    #     (-1, 0, "U"),  # Up
+    #     (1, 0, "D"),  # Down
+    #     (0, -1, "L"),  # Left
+    #     (0, 1, "R"),  # Right
+    # ]
 
-        # Check if we reached the goal
-        if (row, col) == goal:
-            print(f"Shortest path: {path}")
-            print(f"Path length: {len(path)}")
-            break
+    # while queue:
+    #     (row, col), path = queue.popleft()
 
-        # Try all four directions
-        for dr, dc, direction in directions:
-            new_row, new_col = row + dr, col + dc
+    #     # Check if we reached the goal
+    #     if (row, col) == goal:
+    #         print(f"Shortest path: {path}")
+    #         print(f"Path length: {len(path)}")
+    #         break
 
-            # Check if the new position is valid
-            if (
-                0 <= new_row < len(maze)
-                and 0 <= new_col < len(maze[new_row])
-                and maze[new_row][new_col] != "#"
-                and (new_row, new_col) not in visited
-            ):
-                visited.add((new_row, new_col))
-                queue.append(((new_row, new_col), path + direction))
+    #     # Try all four directions
+    #     for dr, dc, direction in directions:
+    #         new_row, new_col = row + dr, col + dc
+
+    #         # Check if the new position is valid
+    #         if (
+    #             0 <= new_row < len(maze)
+    #             and 0 <= new_col < len(maze[new_row])
+    #             and maze[new_row][new_col] != "#"
+    #             and (new_row, new_col) not in visited
+    #         ):
+    #             visited.add((new_row, new_col))
+    #             queue.append(((new_row, new_col), path + direction))
 
     # # Day 8 solution
     # names = content.strip().split(" ")
