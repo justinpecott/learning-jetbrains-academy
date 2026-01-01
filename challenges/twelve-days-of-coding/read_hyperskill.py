@@ -4,7 +4,9 @@ from collections import deque
 # filename = "hyperskill-dataset-119002108.txt" # Day 2
 # filename = "hyperskill-dataset-119020066.txt"  # Day 3
 # filename = "hyperskill-dataset-119046295.txt"  # Day 4
-filename = "hyperskill-dataset-119049171.txt"  # Day 5
+# filename = "hyperskill-dataset-119049171.txt"  # Day 5
+# filename = "hyperskill-dataset-119095940.txt"  # Day 6
+filename = "hyperskill-dataset-119118740.txt"  # Day 7
 
 
 def read_hyperskill_file():
@@ -47,28 +49,104 @@ if __name__ == "__main__":
     content = read_hyperskill_file_lines()
     print(content)
 
+    # Day 7 solution
+    # Build graph and count degrees
+    degree = {}
+
+    for line in content:
+        land1, land2 = line.split(",")
+
+        # Count degree (number of bridges) for each landmass
+        degree[land1] = degree.get(land1, 0) + 1
+        degree[land2] = degree.get(land2, 0) + 1
+
+    # Count landmasses with odd degree
+    odd_degree_count = sum(1 for d in degree.values() if d % 2 == 1)
+
+    # Eulerian path rules:
+    # - 0 odd vertices: Eulerian circuit exists (can traverse all edges once)
+    # - 2 odd vertices: Eulerian path exists (can traverse all edges once)
+    # - More than 2 odd vertices: Need additional crossings
+
+    if odd_degree_count == 0 or odd_degree_count == 2:
+        additional_crossings = 0
+    else:
+        # Need to pair up odd degree vertices
+        # Formula: (odd_degree_count / 2) - 1
+        additional_crossings = (odd_degree_count // 2) - 1
+
+    print(f"\nLandmasses with odd degree: {odd_degree_count}")
+    print(f"Additional bridge crossings required: {additional_crossings}")
+    # Day 6 solution
+    # starting_being = content[0]
+    # print(f"Starting being: {starting_being}")
+
+    # # Build adjacency list for the graph
+    # graph = {}
+    # for line in content[1:]:
+    #     name1, name2 = line.split(",")
+
+    #     # Add bidirectional relationships
+    #     if name1 not in graph:
+    #         graph[name1] = []
+    #     if name2 not in graph:
+    #         graph[name2] = []
+
+    #     graph[name1].append(name2)
+    #     graph[name2].append(name1)
+
+    # # BFS to find furthest being
+    # queue = deque([(starting_being, 0)])  # (being, distance)
+    # visited = {starting_being}
+    # max_distance = 0
+    # furthest_beings = []
+
+    # while queue:
+    #     current, distance = queue.popleft()
+
+    #     # Track beings at maximum distance
+    #     if distance > max_distance:
+    #         max_distance = distance
+    #         furthest_beings = [current]
+    #     elif distance == max_distance:
+    #         furthest_beings.append(current)
+
+    #     # Explore neighbors
+    #     if current in graph:
+    #         for neighbor in graph[current]:
+    #             if neighbor not in visited:
+    #                 visited.add(neighbor)
+    #                 queue.append((neighbor, distance + 1))
+
+    # # Sort alphabetically and get first
+    # furthest_beings.sort()
+    # result = furthest_beings[0]
+
+    # print(f"\nFurthest being: {result}")
+    # print(f"Distance: {max_distance}")
+
     # Day 5 solution
-    coordinates = []
-    for coordinate in content:
-        print(f"Coordinate: {coordinate}")
-        x, y = coordinate.split(",")
-        x = float(x)
-        y = float(y)
-        coordinates.append((x, y))
-        print(f" X: {x}, Y: {y}")
+    # coordinates = []
+    # for coordinate in content:
+    #     print(f"Coordinate: {coordinate}")
+    #     x, y = coordinate.split(",")
+    #     x = float(x)
+    #     y = float(y)
+    #     coordinates.append((x, y))
+    #     print(f" X: {x}, Y: {y}")
 
-    # Apply Shoelace formula
-    n = len(coordinates)
-    area = 0
+    # # Apply Shoelace formula
+    # n = len(coordinates)
+    # area = 0
 
-    for i in range(n):
-        j = (i + 1) % n  # Next vertex (wraps around to 0 at the end)
-        area += coordinates[i][0] * coordinates[j][1]
-        area -= coordinates[j][0] * coordinates[i][1]
+    # for i in range(n):
+    #     j = (i + 1) % n  # Next vertex (wraps around to 0 at the end)
+    #     area += coordinates[i][0] * coordinates[j][1]
+    #     area -= coordinates[j][0] * coordinates[i][1]
 
-    area = abs(area) / 2
+    # area = abs(area) / 2
 
-    print(f"\nArea of polygon: {area}")
+    # print(f"\nArea of polygon: {area}")
     # Day 4 solution
     # fork_status = {}
     # picks = 0
