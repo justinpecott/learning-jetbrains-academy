@@ -9,7 +9,8 @@ import heapq
 # filename = "hyperskill-dataset-119095940.txt"  # Day 6
 # filename = "hyperskill-dataset-119118740.txt"  # Day 7
 # filename = "hyperskill-dataset-119140575.txt"  # Day 8
-filename = "hyperskill-dataset-119143157.txt"  # Day 9
+# filename = "hyperskill-dataset-119143157.txt"  # Day 9
+filename = "hyperskill-dataset-119170557.txt"  # Day 10
 
 
 def read_hyperskill_file():
@@ -52,51 +53,54 @@ if __name__ == "__main__":
     content = read_hyperskill_file_lines()
     print(content)
 
-    # Day 9 solution - Find safest path through grid
-    # Parse the grid
-    grid = []
+    # Day 10 solution - Find longest common rhythm pattern
+    # Parse each drummer's rhythm pattern
+    rhythms = []
     for line in content:
-        row = [int(x) for x in line.split(",")]
-        grid.append(row)
+        rhythm = [int(x) for x in line.split(",")]
+        rhythms.append(rhythm)
 
-    rows = len(grid)
-    cols = len(grid[0])
+    print(f"\nNumber of drummers: {len(rhythms)}")
+    print(f"First drummer's pattern length: {len(rhythms[0])}")
 
-    # Dijkstra's algorithm using a priority queue
-    # Priority queue stores: (cost, row, col)
-    pq = [(grid[0][0], 0, 0)]  # Start at top-left, include its hazard
+    # Helper function to check if a subsequence appears in a sequence
+    def contains_subsequence(sequence, subseq):
+        """Check if subseq appears as a contiguous subsequence in sequence"""
+        subseq_len = len(subseq)
+        seq_len = len(sequence)
 
-    # Track minimum cost to reach each cell
-    min_cost = [[float("inf")] * cols for _ in range(rows)]
-    min_cost[0][0] = grid[0][0]
+        if subseq_len > seq_len:
+            return False
 
-    # Directions: up, down, left, right
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for i in range(seq_len - subseq_len + 1):
+            if sequence[i : i + subseq_len] == subseq:
+                return True
+        return False
 
-    while pq:
-        current_cost, row, col = heapq.heappop(pq)
+    # Find longest common substring
+    # Start with the first drummer's pattern as reference
+    reference = rhythms[0]
+    max_length = 0
 
-        # If we reached bottom-right, we're done
-        if row == rows - 1 and col == cols - 1:
-            print(f"\nMinimum lives lost: {current_cost}")
+    # Try all possible contiguous subsequences from longest to shortest
+    for length in range(len(reference), 0, -1):
+        found = False
+
+        # Try all starting positions for this length
+        for start in range(len(reference) - length + 1):
+            candidate = reference[start : start + length]
+
+            # Check if this candidate appears in all other rhythms
+            if all(contains_subsequence(rhythm, candidate) for rhythm in rhythms[1:]):
+                max_length = length
+                found = True
+                print(f"\nFound common pattern of length {length}: {candidate[:10]}...")
+                break
+
+        if found:
             break
 
-        # Skip if we've found a better path to this cell already
-        if current_cost > min_cost[row][col]:
-            continue
-
-        # Explore neighbors
-        for dr, dc in directions:
-            new_row, new_col = row + dr, col + dc
-
-            # Check if neighbor is within bounds
-            if 0 <= new_row < rows and 0 <= new_col < cols:
-                new_cost = current_cost + grid[new_row][new_col]
-
-                # If this path is cheaper, update and add to queue
-                if new_cost < min_cost[new_row][new_col]:
-                    min_cost[new_row][new_col] = new_cost
-                    heapq.heappush(pq, (new_cost, new_row, new_col))
+    print(f"\nLongest common rhythm pattern length: {max_length}")
 
     # Day 8 solution
 #     queens = []
