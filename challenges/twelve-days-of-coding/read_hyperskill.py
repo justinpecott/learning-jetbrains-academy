@@ -10,7 +10,8 @@ import heapq
 # filename = "hyperskill-dataset-119118740.txt"  # Day 7
 # filename = "hyperskill-dataset-119140575.txt"  # Day 8
 # filename = "hyperskill-dataset-119143157.txt"  # Day 9
-filename = "hyperskill-dataset-119170557.txt"  # Day 10
+# filename = "hyperskill-dataset-119170557.txt"  # Day 10
+filename = "hyperskill-dataset-119192837.txt"  # Day 11
 
 
 def read_hyperskill_file():
@@ -53,54 +54,155 @@ if __name__ == "__main__":
     content = read_hyperskill_file_lines()
     print(content)
 
-    # Day 10 solution - Find longest common rhythm pattern
-    # Parse each drummer's rhythm pattern
-    rhythms = []
+    # Day 11 solution - Critical Path Scheduling with 11 workers
+    actions = {}
+    dependencies = {}
+    dependents = {}  # Reverse mapping: which tasks depend on this task
+
+    # Parse input
     for line in content:
-        rhythm = [int(x) for x in line.split(",")]
-        rhythms.append(rhythm)
+        parts = line.split(",")
+        action_id = int(parts[0])
+        duration = int(parts[1])
 
-    print(f"\nNumber of drummers: {len(rhythms)}")
-    print(f"First drummer's pattern length: {len(rhythms[0])}")
+        # Parse dependencies
+        if len(parts) > 2 and parts[2] != "none":
+            deps = [int(x) for x in parts[2].split(":")]
+        else:
+            deps = []
 
-    # Helper function to check if a subsequence appears in a sequence
-    def contains_subsequence(sequence, subseq):
-        """Check if subseq appears as a contiguous subsequence in sequence"""
-        subseq_len = len(subseq)
-        seq_len = len(sequence)
+        actions[action_id] = duration
+        dependencies[action_id] = deps
+        dependents[action_id] = []
 
-        if subseq_len > seq_len:
-            return False
+    # Build reverse dependency graph
+    for action_id, deps in dependencies.items():
+        for dep in deps:
+            dependents[dep].append(action_id)
 
-        for i in range(seq_len - subseq_len + 1):
-            if sequence[i : i + subseq_len] == subseq:
-                return True
-        return False
+    print(f"\nNumber of actions: {len(actions)}")
 
-    # Find longest common substring
-    # Start with the first drummer's pattern as reference
-    reference = rhythms[0]
-    max_length = 0
+    # Calculate critical path priority (bottom level) for each task
+    # This is the longest path from this task to any leaf (task with no dependents)
+    critical_priority = {}
 
-    # Try all possible contiguous subsequences from longest to shortest
-    for length in range(len(reference), 0, -1):
-        found = False
+    def calculate_critical_priority(action_id):
+        """Calculate the longest path from this task to completion"""
+        if action_id in critical_priority:
+            return critical_priority[action_id]
 
-        # Try all starting positions for this length
-        for start in range(len(reference) - length + 1):
-            candidate = reference[start : start + length]
+        # Base case: if no dependents, priority is just this task's duration
+        if not dependents[action_id]:
+            critical_priority[action_id] = actions[action_id]
+            return critical_priority[action_id]
 
-            # Check if this candidate appears in all other rhythms
-            if all(contains_subsequence(rhythm, candidate) for rhythm in rhythms[1:]):
-                max_length = length
-                found = True
-                print(f"\nFound common pattern of length {length}: {candidate[:10]}...")
-                break
+        # Recursive case: duration + max priority of dependents
+        max_dependent_priority = 0
+        for dependent in dependents[action_id]:
+            dep_priority = calculate_critical_priority(dependent)
+            max_dependent_priority = max(max_dependent_priority, dep_priority)
 
-        if found:
+        critical_priority[action_id] = actions[action_id] + max_dependent_priority
+        return critical_priority[action_id]
+
+    # Calculate priorities for all tasks
+    for action_id in actions:
+        calculate_critical_priority(action_id)
+
+    # Simulate execution with 11 workers using list scheduling
+    MAX_WORKERS = 11
+    current_time = 0
+    completed = set()
+    running = {}  # action_id -> finish_time
+    ready_queue = []
+
+    # Find initial tasks (no dependencies)
+    for action_id in actions:
+        if not dependencies[action_id]:
+            heapq.heappush(ready_queue, (-critical_priority[action_id], action_id))
+
+    while len(completed) < len(actions):
+        # Process any tasks that finish at current time
+        finished_now = [
+            aid for aid, finish_time in running.items() if finish_time == current_time
+        ]
+        for action_id in finished_now:
+            completed.add(action_id)
+            del running[action_id]
+
+            # Check if any new tasks become ready
+            for dependent in dependents[action_id]:
+                if all(dep in completed for dep in dependencies[dependent]):
+                    heapq.heappush(
+                        ready_queue, (-critical_priority[dependent], dependent)
+                    )
+
+        # Assign workers to ready tasks (up to 11 total workers)
+        while ready_queue and len(running) < MAX_WORKERS:
+            _, action_id = heapq.heappop(ready_queue)
+            # Start this task
+            running[action_id] = current_time + actions[action_id]
+
+        # Advance time to next event (task completion)
+        if running:
+            current_time = min(running.values())
+        elif ready_queue:
+            # Should not happen if logic is correct
+            break
+        else:
+            # All done
             break
 
-    print(f"\nLongest common rhythm pattern length: {max_length}")
+    print(f"\nMinimum time with 11 workers: {current_time} minutes")
+
+    # Day 10 solution - Find longest common rhythm pattern
+    # # Parse each drummer's rhythm pattern
+    # rhythms = []
+    # for line in content:
+    #     rhythm = [int(x) for x in line.split(",")]
+    #     rhythms.append(rhythm)
+
+    # print(f"\nNumber of drummers: {len(rhythms)}")
+    # print(f"First drummer's pattern length: {len(rhythms[0])}")
+
+    # # Helper function to check if a subsequence appears in a sequence
+    # def contains_subsequence(sequence, subseq):
+    #     """Check if subseq appears as a contiguous subsequence in sequence"""
+    #     subseq_len = len(subseq)
+    #     seq_len = len(sequence)
+
+    #     if subseq_len > seq_len:
+    #         return False
+
+    #     for i in range(seq_len - subseq_len + 1):
+    #         if sequence[i : i + subseq_len] == subseq:
+    #             return True
+    #     return False
+
+    # # Find longest common substring
+    # # Start with the first drummer's pattern as reference
+    # reference = rhythms[0]
+    # max_length = 0
+
+    # # Try all possible contiguous subsequences from longest to shortest
+    # for length in range(len(reference), 0, -1):
+    #     found = False
+
+    #     # Try all starting positions for this length
+    #     for start in range(len(reference) - length + 1):
+    #         candidate = reference[start : start + length]
+
+    #         # Check if this candidate appears in all other rhythms
+    #         if all(contains_subsequence(rhythm, candidate) for rhythm in rhythms[1:]):
+    #             max_length = length
+    #             found = True
+    #             print(f"\nFound common pattern of length {length}: {candidate[:10]}...")
+    #             break
+
+    #     if found:
+    #         break
+
+    # print(f"\nLongest common rhythm pattern length: {max_length}")
 
     # Day 8 solution
 #     queens = []
